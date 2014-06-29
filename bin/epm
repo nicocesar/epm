@@ -42,6 +42,7 @@ command :transact do |c|
   c.syntax = 'epm transact'
   c.description = 'Send a transaction to a contract. Note this is to work with contracts, it will not (by default) send ether.'
   c.action do |args|
+    EPM.transact(args)
     print "Transaction Sent.\n"
   end
 end
