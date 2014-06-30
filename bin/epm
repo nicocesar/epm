@@ -10,12 +10,11 @@ program :description, 'Ethereum Package Manager assists in the management of Eth
 ## Package Workflow Commands
 ##
 command :compile do |c|
-  c.syntax = 'epm compile'
+  c.syntax = 'epm compile [Contract File]'
   # summary is displayed on --help
   c.summary = 'Compile an ethereum contract and return the byte code array.'
   # description is deplayed on subcommand --help
   c.description = 'Compile an ethereum contract and return the byte code array. Compile does not send to the blockchain, it only returns the byte code array.'
-  c.example = 'epm compile TheContract.lll'
   c.action do |args|
     result = EPM.compile(args)
     result.each{|l| print l + "\n"}
@@ -23,12 +22,11 @@ command :compile do |c|
 end
 
 command :create do |c|
-  c.syntax = 'epm create'
+  c.syntax = 'epm create [Contract File]'
   # summary is displayed on --help
   c.summary = 'Compile an ethereum contract and deploy to the blockchain.'
   # description is deplayed on subcommand --help
   c.description = 'Compile an ethereum contract and deploy to the blockchain. Create is used only for single contracts rather than packages of contracts. Use epm deploy to send packages of contracts to the blockchain.'
-  c.example = 'epm create TheContract.lll'
   c.action do |args|
     result = EPM.create(args)
     result.each{|l| print l + "\n"}
@@ -36,12 +34,11 @@ command :create do |c|
 end
 
 command :deploy do |c|
-  c.syntax = 'epm deploy'
+  c.syntax = 'epm deploy [Package Definition File from Local or Remote]'
   # summary is displayed on --help
   c.summary = 'Compile and deploy a system of contracts to the blockchain.'
   # description is deplayed on subcommand --help
   c.description = 'Compile and deploy a system of contracts to the blockchain. It is a wrapper for the remainder of the EPM functionality which works in an automated way to deploy as many contracts and send as many transactions as the developer needs to set up a system of contracts. Deploy will work either with local package-definition files or with package-definition files located on any remote git server which the user has access to. See gem README for EPM package-definition file syntax.'
-  c.example = 'epm deploy https://github.com/project-douglas/eris'
   c.action do |args|
     EPM.deploy(args)
   end
@@ -51,12 +48,11 @@ end
 ## EPM Tools
 ##
 command :transact do |c|
-  c.syntax = 'epm transact'
+  c.syntax = 'epm transact [Recipient] [Data]'
   # summary is displayed on --help
   c.summary = 'Send a transaction to a contract.'
   # description is deplayed on subcommand --help
   c.description = 'Send a transaction to a contract. By definition this will be a 0 value call. The account sending the transaction will need ether, but only to provide the gas for the individual call. The first argument sent to the command line will be the recipient and the remaining arguments sent to the command line will be the data with each of the data slots separated by a space on the command line (or a new element in the array if calling programmatically). Arguments which are prefixed by `0x` will be treated as hex values and arguments which are not will be treated as strings. EPM will compile all of the arguments into a single RPC call which is correctly formated for all of the clients.'
-  c.example = 'epm transact 0xd6e96ee6661367735c15894193bdca276bae27ba newthread 0x0 0x0 0x65ef13e5f4515ee346e5372c4021baa7a723f25a'
   c.action do |args|
     EPM.transact(args)
     print "Transaction Sent.\n"
@@ -64,12 +60,11 @@ command :transact do |c|
 end
 
 command :query do |c|
-  c.syntax = 'epm query'
+  c.syntax = 'epm query [Contract Address] [Storage Location]'
   # summary is displayed on --help
   c.summary = 'Query a storage position of a contract currently on the blockchain.'
   # description is deplayed on subcommand --help
   c.description = 'Query a storage position of a contract currently on the blockchain. Accepts two arguments, the first argument is the contract to be queried, and the second argument is the storage location to be queried.'
-  c.example = 'epm query 0x65ef13e5f4515ee346e5372c4021baa7a723f25a 0xd6e96ee6661367735c15894193bdca276bae27ba'
   c.action do |args|
     print EPM.query(args) + "\n"
   end
