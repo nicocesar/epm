@@ -1,155 +1,152 @@
 [![Stories in Ready](https://badge.waffle.io/project-douglas/epm.png?label=ready&title=Ready)](https://waffle.io/project-douglas/epm)
+
 # Introduction
 
-EPM is a package (provision?) manager. It is meant to simplify the management of git hosted repositories which contain Ethereum standard or customized contracts. This package manager should work in the way which most package managers operate -- with the addition that it will be able to interact with the Ethereum BlockChain.
+EPM is a package manager for sets of Ethereum smart contracts. It is meant to simplify the management of git hosted repositories which contain Ethereum contracts. This package manager should work in a way which is roughly analogous to how most package managers operate -- with the addition that it will be able to interact with the Ethereum BlockChain. The Gem will primarily act as a hub for Ethereum contract developers by assisting them in the building, testing, simulating, and deploying of their Ethereum smart contracts.
 
-In addition to installing, uninstalling, updating, and upgrading your packages for you, the Gem will also act as a hub for different Ethereum contract building, testing, simulating, and deploying mechanisms.
+Ethereum Package Manager allows Ethereum contract developers to push contracts straight to their ethereum clients via rpc. EPM also supports various other necessities when developing ethereum contract networks. In addition to deploying contracts to ethereum clients (Ethereal, Ethereum-go, and Eth-cpp currently support RPC; *note*, AlethZero does not), the package has other features as well. The package:
 
-The package manager builds in a standard tipping system which is -- by convention -- built to allow tipping of the EPM system as well as the other tools which developers use to build, test, and deploy their contracts onto the Ethereum BlockChain. The tipping system is on by default as a mechanism to assist in further development of Ethereum contract deployment products. It can, of course, be turned off (this is open source software).
+* keeps a log of the contracts which have been deployed so that you can then easily see those contracts;
+* allows users to transact with contracts;
+* allows users to query contract storage;
+* allows users to deploy a sequence of contracts; and
+* allows users to start, stop, and restart ethereum servers with predefined options.
+
+The package manager will (soon-ish) add in a standard tipping functionality which is -- by convention but not requirement -- built to allow tipping of the stack which the developer has used to build, test, and deploy their contracts onto the Ethereum BlockChain. The tipping system will be on by default as a mechanism to assist in further development of Ethereum contract deployment products. It can, of course, be turned off (this is, after all, open source software).
 
 # Installing
 
-This is a Ruby gem and will require that you have Ruby on your system (unless and until someone ports this to Python or Node). Once you have ensured that you have Ruby on your system, `gem install epm`.
+This is a Ruby gem and will require that you have Ruby on your system (unless and until someone ports this to Python or Node).
 
-# Using
+* On debian variants of Linux, use `sudo apt-get install ruby2.0 ruby 1.9-dev` (2.0 is not a strict dependency, the ruby is fairly standard so there should be no problem running on 1.9 but I'm not sure if it will work with 1.8 the 1.9-dev package adds compilation features which are needed for some of the dependencies).
+* On OSX ruby is installed by default.
+* Windows users can use the rubyinstaller from [here](http://rubyinstaller.org/).
 
-The gem is a command line tool. All of the commands are built to run primarily from the command line. Of course the gem will integrate as a Ruby gem into your Ruby application, but primarily it is meant to work from the command line.
+Once you have ensured that you have Ruby on your system, `gem install epm`.
 
-## Contract Tools Features
+## Important - Configure your Client
 
-`epm install` -- used like brew install to install a particular Ethereum tool. Use in conjuction with the `-l` or `--local` flag to install the tool as the local tool only for this particular project. Otherwise will install the tool as a global user tool.
+**The first thing to do** when you have installed the EPM package is to configure the server. The epm config file is placed by default in `~/.epm/epm-rpc.json`. To install the default settings run:
 
-`epm uninstall` -- used like brew uninstall to uninstall a particular Ethereum tool. Same restrictions for the `-l` or `--local` flag as with `epm install` are applicable to `epm uninstall`.
+```bash
+$ rake setup
+```
 
-`epm upgrade` -- used like brew upgrade to upgrade a particular Ethereum tool. Same restrictions for the `-l` or `--local` flag as with `epm install` are applicable to `epm upgrade`.
+After running the rake command (rake is ruby's make), then you can edit the config file in whatever editor you use. Set your preferred settings to however you like them. After that you can use the Create and Transact commands freely.
 
-`epm list` -- list installable tools.
+## Install Compilers
 
-`epm list-installed` -- list currently installed tools.
+Note, the EPM example config file has paths to all of the compilers. EPM, however is agnostic to which compiler you use. Whichever one (or ones) you want to use, install those. The rest forget about.
 
-## Package Management Features
+The compilers you use should be manually installed.
 
-`epm pull` -- will pull contract provisions, contracts, or packages of contracts based on the contract definition files in the project folder. If used without calling any contract definition file after `epm pull` will pull all the necessary components for all of the contract definition files viewable from the project root. If used with a contract definition file after `epm pull` will pull all the necessary components for the contract definition file.
+* Mutan is installed with `go get -u github.com/obscuren/mutan`.
+* LLLC is installed with the cpp-ethereum client (see build instructions [here](https://github.com/ethereum/cpp-ethereum/wiki)).
+* Serpent is installed with the following commands:
 
-`epm push` -- will push contract provisions, contracts, or packages of contracts assembled in the project root to the repository noted in the local configuration file's `repository` setting
+```bash
+git clone https://github.com/ethereum/serpent.git
+cd serpent
+sudo python setup.py install
+```
 
-`epm update` -- will pull updates to the contract provisions, contracts, or packages of contracts based on the contract definition files in the project folder. Can be used with or without a contract definition file as with `epm pull`.
+When you send a create or deploy command, EPM will look at the file extension of the contract. When it is `lll` then EPM will call the LLL compiler (from the supplied LLLC path); when it is `mu` or `mut` then EPM will call the Mutan compiler; when it is `se` or `ser` then EPM will call the Serpent compiler.
 
-## Contract Workflow Features
+# Using the CLI Interface
 
-`epm make` -- used to pull Ethereum provisions, contracts, or packaged and build out the application or package(s) in this project based on the contract definition files. If used without calling a particular contract definition file after `epm make` will make all the contract definition files visible from the project root (which is where epm make should be called from). If used with a particular contract definition file after `epm make` will only make that particular contract definition.
+All of the commands are built to run primarily from the command line. Of course the gem will integrate as a Ruby gem into your Ruby application, but primarily it is meant to work from the command line.
 
-`epm test` -- used to test Ethereum contracts based upon the tester included in the global or local configuration file.
+EPM offers the following commands:
 
-`epm simulate` -- used to simulate Ethereum contracts or sets of contracts based upon the simulator included in the global or locla configuration file.
+* `epm start` -- starts the default ethereum server with the configuration options supplied in the config file.
+* `epm stop` -- stops the default ethereum server.
+* `epm restart` -- restarts the default ethereum server.
+* `epm rpc` -- sends any of the rpc commands to the ethereum server. This is useful when developers need access to the rpc commands which are not wrapped and summarized below, or when developers need to use one of the commands below (primarily create and transact) but without the opinionated epm defaults (e.g., endowment of 0, and transact with 0).
+* `epm query` -- queries a storage location on the ethereum blockchain. Accepts two arguments, the first argument is the contract to be queried, and the second argument is the storage location to be queried.
+* `epm transact` -- sends a transaction to an ethereum contract. By definition this will be a 0 value call. The account sending the transaction will need ether, but only to provide the gas for the individual call. The first argument sent to the command line will be the recipient and the remaining arguments sent to the command line will be the data with each of the data slots separated by a space on the command line (or a new element in the array if calling programmatically). Arguments which are prefixed by `0x` will be treated as hex values and arguments which are not will be treated as strings. EPM will compile all of the arguments into a single RPC call which is correctly formated for all of the clients.
+* `epm compile` -- compiles a contract and returns the byte code array for that contract to the command line (or if called programmatically to the calling program).
+* `epm create` -- compiles a contract and sends to the ethereum blockchain. Create is used only for single contracts rather than packages of contracts. Use epm deploy to send packages of contracts to the blockchain.
+* `epm deploy` -- deploy is the most sophisticated command. It is a wrapper for the remainder of the EPM functionality which works in an automated way to deploy as many contracts and send as many transactions as the developer needs to set up a system of contracts. Deploy will work either with local package-definition files or with package-definition files located on any remote git server which the user has access to. See the package definition section below for the domain specific langauge which EPM deploy uses.
 
-`epm deploy` -- used to deploy contracts to the Ethereum blockchain.
+# Package Deployment
 
-`epm update-deployed` -- used to send a command to currently running contracts on the Ethereum blockchain to update themselves based on the git diff between the most recent commit of the project repository and the current commit when the contracts were deployed to the blockchain.
+Rarely will contract devs only want to deploy one contract. Usually they will want to deploy a series of contracts. EPM assists in this with the package deployment feature. To deploy packages, there are three commands that can be used: `create`, `modify-deploy`, `transact`, `query`, `log`, and `set`.
 
-`epm destroy` -- used to send a suicide command to all of the contracts in the Ethereum blockchain which are derived from the project root.
+These commands **must** be formulated as such:
 
-## EPM Self-Reflective Features
+```
+# Package Email: dennis@projectdouglas.org
+# Package Repository: https://github.com/project-douglas/c3D-contracts
 
-`epm configure-local` -- open the local configuration file in the default editor.
+deploy:
+  General/DOUG-v6.lll => {{DOUG}}
+modify-deploy:
+  General/repDB.lll => {{rep}}
+  (def 'DOUG 0x9c0182658c9d57928b06d3ee20bb2b619a9cbf7b) => (def 'DOUG {{DOUG}})
+transact:
+  {{DOUG}} => "register" "rep" {{rep}} "" "" "" "" ""
+query:
+  {{DOUG}} => 0x18 => {{DOUG_LIKES_YOU}}
+```
 
-`epm configure-global` -- open the global configuration file in the default editor.
+Each line which does not begin with whitespace is read as a command sequence. The remainder of the lines relevant to that command must begin with whitespace (tabs or spaces do not matter). Lines which are blank or begin with a `#` will not be parsed.
 
-`epm self-update` -- update the EPM tool to the latest version.
+The first portion of the command is the command, the remainder are the params for the command. Each param is separated by ` => `.
 
-`epm implode` -- remove EPM entirely.
+## Deploy Command
 
-## Package Management Features
+The command is straight-forward. Deploy a contract params:
 
-`epm install` --
+1. File of the contract to be compiled and deployed (relative path from the definition file, or absolute path).
+2. The variable name of the contract (usually to be used later).
 
-`epm pull` --
+## Modify-Deploy Command
 
-`epm push` --
+This command first modifies a section of a contract (usually substituting in a variable) and then deploys. Modify-deploy a contract params:
 
-`epm destroy` --
+1. File of the contract to be compiled and deployed (relative path from the definition file, or absolute path).
+2. The variable name of the contract (usually to be used later).
+3. The portion of the contract which will be substituted.
+4. What is to replace it (which can use variable names established by contracts deployed prior to this modification).
 
-`epm update` --
+Modify-deploy commands may have multiple substitutions. Just add additional substitutions on new indented lines separated by `=>`
 
-`epm list` --
+## Transact Command
 
-## Contract Workflow Features
+The transact command is also straight forward. Transact params:
 
-`epm make` --
+1. The recipient of the transaction.
+2. The data for the transaction.
 
-`epm test` --
+As with all EPM transactions, this is not meant to support value, it is meant to provide data. Each 32 byte transaction slot is separated by a space. Strings can be sent in quotes or not in quotes, hex address can be sent using 0x or without, empty slots are denoted by "".
 
-`epm simulate` --
+## Query Command
 
-`epm deploy` --
+The query command is used to query storage spaces. Query params:
 
-# Configuration Options
+1. The address of the contract to query.
+2. The storage location of the contract to query.
+3. The variable name to store the result as.
 
-EPM uses what should be a fairly approachable two configuration layers approach to managing configurations. The first level which the gem will look at will be the `~/.epm/config.epm` file. These are the user global configurations. The global configurations will be overwritten by local configuration files in the config.epm file of the root directory of the project you are working on (for the time being epm should be called from this directory). The config.epm file is a [TOML](https://github.com/mojombo/toml) formated configuration file with the following options.
+## Log Command
 
-## Global Configuration Options
+The log command will dump into your deploy log. Log params:
 
-`editor` -- String denoting the path which EPM should call in order to edit the contract. Default: shell environment's editor.
+1. key
+2. val
 
-`linter` -- String denoting the path which EPM should call in order to lint a contract. Default: ???
+## Set Command
 
-`tester` -- String denoting the path which EPM should call in order to run your test suite. Default: ???
+The set command is used to set key:val pairs for substitution later. Key params:
 
-`simulator` -- String denoting the path which EPM should call in order to start the simulator. Default: ???
+1. key
+2. val
 
-`compiler` -- String denoting the path which EPM should call in order to compile the contract into the byte language for deployment to the Ethereum BlockChain. Default: ???
+# Tips && Usage
 
-`blacklisted-repos` -- Array of strings denoting github or other git repos which are Blacklisted. Default: []
+If you want to use AlethZero, that is fine but you will also have to use `eth` headless because AlethZero does not currently have RPC capabilities. I run eth in a second directory listening on a second port with a peer server of AlethZero and it works just fine. Such a set up allows devs to see what is happening in AlethZero (as long as both headless and Aleth connect to the same peer server) but gain the RPC capabilities the package needs.
 
-`deployer-keys` -- String denoting the public key of the deploying coder|lawyer -- which some or all contracts can use to ensure a tip is sent to the deployer.
-
-`infrastructure-keys` -- Array of strings denoting the public keys of the testers, linters, simulators, package managers, and other infrastructure which the deployer used to assist in the deployment of the contract. Strings should be in the form `KEY:AMOUNT:MESSAGE` where KEY is the public hash which the contract will send the tip and where AMOUNT is the **percentage** of the tip which will go to this key. MESSAGE is the signing message of the tip and is optional.
-
-## Local Configuration Options
-
-The local configuration options include *all* of the global configuration options, and local configuration options will override the global configuration options. In addition, there are a few local configuration options which are not read by the global config file.
-
-`name` -- String denoting the name of the package. If the package contains one contract the package and the contract will be the same thing. If the package contains more than one contract then the package will include all of the contracts.
-
-`author` -- String denoting the author of the package.
-
-`author-address` -- String denoting the Ethereum address of the author of the package (used for tipping system when others reuse the contract or package).
-
-`repository` -- String denoting the remote git repository for the package. When the user calls `epm push` EPM will send the package to this address.
-
-# Contract and Package Definition Files
-
-EPM uses contract definition files to build and maintain contracts. Contract definition files are TOML files.
-
-## Package Definition Files
-
-Define the contracts used in the package and the relationships between them. TODO.
-
-## Contract Definition Files -- Shortform
-
-The shortform contract definition allows coder|lawyers to pull in \*.ethereum-contract files to the working folder to be tested, simulated, and deployed from established git repositories.
-
-EPM will pull from any git repository, but it will default to github repositories, so when you send it the following repository: `watershedlegal/ethereum-boilerplate-prefaces` it will know that that is a github address. If you would like to add a private repository or a bitbucket or any other repository simply add the full address to the line. If the repository contains multiple `.ethereum-contract` files and you only want one of those files, you can state the contract you want EPM to pull into the working directory by specifying that instead of the repository in the `XXXXXXX.ethereum-definition` file.
-
-The `XXXX.ethereum-definition` file will simply be a list of the repositories or contract files which EPM should import into the working directory's repo folder. After that it will be up to the coder|lawyer to build the contracts into a working network or meta contract, test, simulate, and deploy.
-
-## Contract Definition Files -- Longform
-
-The longform contract definition allows coder|lawyers to pull in pieces of contracts from different sources and have EPM attempt to assemble a cohesive contract in which the lawyer|coder can then edit before linting, testing, simulating, and deploying.
-
-As with the shortform contract definitions, EPM will pull from any repository based on the rules described above. Addresses may point to the entire repository, in which case EPM will pull in all \*.ethereum-provision files. If only one file is wanted for the preface section, that file path can be specified after the repository address. In addition, if only certain line numbers of a certain file are desired to be pulled in then EPM will know to look for that when you add the following string: `REPONAME/FILEPATH:STARTLINE_ENDLINE` where STARTLINE and ENDLINE are the line numbers which you would like to be pulled in.
-
-The contract definition file is also a TOML formatted configuration file. There are three sections to the contract definition file (which by convention should be XXXXX.ethereum-definition where XXXX is the name of the contract):
-
-1. `provisions` -- Array of strings denoting the repository addresses which EPM will pull from and formulate into the main provisions of this contract.
-2. `constants` -- Array of KEY:VALUE pairs which set the constant values after building a contract.
-3. `tip-amount` -- Integer denoting the amount of ether to be distributed to the infrastructure network which helped you build and deploy this contract or system of contracts.
-4. `constants` -- Array of KEY:VALUE pairs which set the constant values after building a contract.
-5. `tip-amount` -- Integer denoting the amount of ether to be distributed to the infrastructure network which helped you build and deploy this contract or system of contracts.
-
-# Roadmap / TODO
-
-- [ ] Everything
+Note, EPM is set up to interact with contracts, not to transmit value. You'll have to modify the codebase if you intend to use EPM to send ether to contracts. Better yet, use the actual clients for that...!
 
 # Contributing
 
@@ -162,6 +159,8 @@ The contract definition file is also a TOML formatted configuration file. There 
 
 # License
 
-MIT License - (c) 2014 - Watershed Legal Services, PLLC. All copyrights are owned by [Watershed Legal Services, PLLC](http://watershedlegal.com).
+Modified MIT License - (c) 2014 - Project Douglas Limited. All copyrights are owned by [Project Douglas Limited](http://projectdouglas.org).
 
 See License file.
+
+In other words, don't be a jerk.
