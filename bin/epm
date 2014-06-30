@@ -92,9 +92,10 @@ end
 command :start do |c|
   c.syntax = 'epm start'
   c.description = 'Start your default ethereum server.'
-  c.action do
+  c.option '-d', 'Increase verbosity of eth server.'
+  c.action do |args, opts|
     print "Please be patient, this will take a few seconds.\n"
-    EPM.start
+    EPM.start opts
     print "Server has started.\n"
   end
 end
@@ -111,9 +112,10 @@ end
 command :restart do |c|
   c.syntax = 'epm restart'
   c.description = 'Restart your default ethereum server.'
-  c.action do
+  c.option '-d', 'Increase verbosity of eth server.'
+  c.action do |args, opts|
     print "Please be patient, this will take a few seconds.\n"
-    EPM.restart
+    EPM.restart opts
     print "Server has been restarted.\n"
   end
 end
