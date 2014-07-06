@@ -93,6 +93,8 @@ transact:
   {{DOUG}} => "register" "rep" {{rep}} "" "" "" "" ""
 query:
   {{DOUG}} => 0x18 => {{DOUG_LIKES_YOU}}
+endow:
+  {{DOUG}} => 10000000
 ```
 
 Each line which does not begin with whitespace is read as a command sequence. The remainder of the lines relevant to that command must begin with whitespace (tabs or spaces do not matter). Lines which are blank or begin with a `#` will not be parsed.
@@ -147,6 +149,13 @@ The set command is used to set key:val pairs for substitution later. Key params:
 
 1. key
 2. val
+
+## Endowment Command
+
+The endowment command is used to endow a contract. Endow params:
+
+1. contract to endow
+2. value of endowment
 
 # Tips && Usage
 
