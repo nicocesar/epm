@@ -17,7 +17,7 @@ module EPM
           'aDest' => @recipient,
           'bData' => @data,
           'xGas' => '100000',
-          'xGasPrice' => '100000000000000'
+          'xGasPrice' => ( @settings['gas-price'] || '100000000000000' )
         }
         post_body = { 'method' => 'transact', 'params' => params, 'id' => 'epm-rpc', "jsonrpc" => "2.0" }.to_json
       elsif @settings['preferred-client'] == ('go' || 'ethereal')
@@ -25,7 +25,7 @@ module EPM
           'recipient' => @recipient,
           'value' => '',
           'gas' => '100000',
-          'gasprice' => '100000000000000',
+          'gasprice' => ( @settings['gas-price'] || '100000000000000' ),
           'body' => @data,
         }
         post_body = { 'method' => 'EthereumApi.Transact', 'params' => params, 'id' => 'epm-rpc', "jsonrpc" => "2.0" }.to_json

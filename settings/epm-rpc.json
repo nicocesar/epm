@@ -12,6 +12,7 @@
   "directory": "~/.ethereum", // in cpp world Aleth defaults to this so change to a different directory to run eth headless in
   "eth-listen-port": "30303", // see the comment above
   "name": "name", // this is the client name
+  "gas-price": "100000000000000",
   "address-public-key": "0xact",
   "address-private-key": "0xsec"
 }
