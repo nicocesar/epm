@@ -9,11 +9,11 @@ module EPM
       @data      = EPM::HexData.construct_data data
     end
 
-    def transact
+    def transact value=''
       if @settings['preferred-client'] == 'cpp'
         params = {
           'sec' => @settings["address-private-key"],
-          'xValue' => '',
+          'xValue' => value,
           'aDest' => @recipient,
           'bData' => @data,
           'xGas' => '100000',
@@ -23,7 +23,7 @@ module EPM
       elsif @settings['preferred-client'] == ('go' || 'ethereal')
         params = {
           'recipient' => @recipient,
-          'value' => '',
+          'value' => value,
           'gas' => '100000',
           'gasprice' => ( @settings['gas-price'] || '100000000000000' ),
           'body' => @data,

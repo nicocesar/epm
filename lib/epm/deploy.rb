@@ -38,6 +38,9 @@ module EPM
             log cmd.shift
           when 'set:'
             set_var cmd.shift
+          when 'endow:'
+            endow cmd.shift
+            sleep 1
           end
         end
       end
@@ -86,6 +89,16 @@ module EPM
       data = data.split(' ')
       p "Sending #{recipient} the data: #{data}."
       EPM::Transact.new(recipient, data, @settings).transact
+    end
+
+    def endow command
+      recipient = command.shift
+      until ! recipient[/(\{\{.*?\}\})/]
+        recipient.gsub!($1, @brain[$1])
+      end
+      endowment = command.shift
+      p "Sending #{recipient} an endowment of: #{endowment}."
+      EPM::Transact.new(recipient, data, @settings).transact endowment
     end
 
     def query command
