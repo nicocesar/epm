@@ -98,7 +98,7 @@ module EPM
       end
       endowment = command.shift
       p "Sending #{recipient} an endowment of: #{endowment}."
-      EPM::Transact.new(recipient, data, @settings).transact endowment
+      EPM::Transact.new(recipient, '', @settings).transact endowment
     end
 
     def query command
