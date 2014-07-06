@@ -1,12 +1,6 @@
 require 'bundler'
 Bundler::GemHelper.install_tasks
 
-desc "Sets up EPM so users can configure"
-task :setup do
-  require './lib/epm'
-  EPM::Settings.check
-end
-
 desc "Update Sublime Package"
 task :sublime do
   Dir.chdir(File.dirname(__FILE__))

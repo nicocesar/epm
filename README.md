@@ -24,15 +24,21 @@ This is a Ruby gem and will require that you have Ruby on your system (unless an
 
 Once you have ensured that you have Ruby on your system, `gem install epm`.
 
+Note, if you install the gem with `sudo gem install epm` then your user will not have access to the settings file when you run `epm setup`, so instead of running `epm setup` you will want do something along the lines of:
+
+```
+curl -o ~/.epm/epm-rpc.json https://raw.githubusercontent.com/project-douglas/epm/master/settings/epm-rpc.json
+```
+
 ## Important - Configure your Client
 
 **The first thing to do** when you have installed the EPM package is to configure the server. The epm config file is placed by default in `~/.epm/epm-rpc.json`. To install the default settings run:
 
 ```bash
-$ rake setup
+$ epm setup
 ```
 
-After running the rake command (rake is ruby's make), then you can edit the config file in whatever editor you use. Set your preferred settings to however you like them. After that you can use the Create and Transact commands freely.
+After running the epm setup command, then you can edit the config file in whatever editor you use. Set your preferred settings to however you like them. After that you can use the Create and Transact commands freely.
 
 ## Install Compilers
 

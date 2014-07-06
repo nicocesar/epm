@@ -119,3 +119,11 @@ command :restart do |c|
     print "Server has been restarted.\n"
   end
 end
+
+command :setup do |c|
+  c.syntax = 'epm setup'
+  c.description = 'Setup your EPM instance.'
+  c.action do
+    EPM::Settings.check
+  end
+end
