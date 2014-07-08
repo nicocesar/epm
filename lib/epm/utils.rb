@@ -40,7 +40,7 @@ module EPM
     end
 
     def eth_processes
-     a = `ps ux`.split("\n").select{|e| e[/eth --json-rpc-port/]}
+     a = `ps ux`.split("\n").select{|e| e[/eth.* --json-rpc-port/]}
      # a << `ps ux`.split("\n").select{|e| e[/ethereum/]}
      a << `ps ux`.split("\n").select{|e| e[/ethereal/]}
      a = a.flatten
