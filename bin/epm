@@ -17,7 +17,7 @@ command :compile do |c|
   c.description = 'Compile an ethereum contract and return the byte code array. Compile does not send to the blockchain, it only returns the byte code array.'
   c.action do |args|
     result = EPM.compile(args)
-    result.each{|l| print l + "\n"}
+    result.each{|l| print l ; print "\n"}
   end
 end
 
@@ -29,7 +29,7 @@ command :create do |c|
   c.description = 'Compile an ethereum contract and deploy to the blockchain. Create is used only for single contracts rather than packages of contracts. Use epm deploy to send packages of contracts to the blockchain.'
   c.action do |args|
     result = EPM.create(args)
-    result.each{|l| print l + "\n"}
+    result.each{|l| print l ; print "\n"}
   end
 end
 
@@ -66,7 +66,8 @@ command :query do |c|
   # description is deplayed on subcommand --help
   c.description = 'Query a storage position of a contract currently on the blockchain. Accepts two arguments, the first argument is the contract to be queried, and the second argument is the storage location to be queried.'
   c.action do |args|
-    print EPM.query(args) + "\n"
+    print EPM.query(args)
+	  pritn	"\n"
   end
 end
 
